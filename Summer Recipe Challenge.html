@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍉 Tasty Summer Recipes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+            color: #333;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark {
+            background: #1f1f1f;
+            color: #e0e0e0;
+        }
+
+        header {
+            background: #ff6f61;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .container {
+            background: #2c2c2c;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .tab-button {
+            background: #eee;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        body.dark .tab-button {
+            background: #444;
+            color: #fff;
+        }
+
+        .tab-button.active {
+            background: #ff6f61;
+            color: white;
+        }
+
+        .recipe-image {
+            width: 100%;
+            max-height: 600px;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 0 auto 1rem;
+            display: block;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .recipe-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+
+
+        .slider-container {
+            margin: 1rem 0;
+        }
+
+        .print-button,
+        .copy-button,
+        .email-button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .print-button {
+            background: #ff6f61;
+            color: white;
+        }
+
+        .copy-button {
+            background: #4caf50;
+            color: white;
+        }
+
+        .email-button {
+            background: #2196f3;
+            color: white;
+        }
+
+        #copied-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 9999;
+        }
+
+        #copied-badge.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.dark #copied-badge {
+            background: #66bb6a;
+            color: #e0ffe0;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        @media print {
+
+            header,
+            .tabs,
+            .theme-toggle,
+            .print-button,
+            .copy-button,
+            .email-button {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #ff6f61;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        body.dark footer {
+            background: #333;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <header>
+        <h1>🍉 Tasty Summer Recipe Challenge</h1>
+        <p>Fresh flavors, sunny vibes, and delicious memories</p>
+    </header>
+    <h2>Why This Recipe Is My Summer Favorite</h2>
+    <p>
+        There’s something about this recipe that <em>tastes like summer</em>. Maybe it’s the juicy, sun-ripened
+        fruit or the way it comes together in just a few minutes — no oven, no stress, just fresh ingredients and
+        good vibes.
+    </p>
+    <p>
+        Every summer, my family gathers in the backyard with music playing, kids running around, and the smell of
+        something amazing in the air. This dish is always the star of the table. It's refreshing, colorful, and
+        perfect for those long sunny evenings.
+    </p>
+    <ul>
+        <li>✅ Incredibly easy to make</li>
+        <li>✅ Uses peak-season ingredients</li>
+        <li>✅ Everyone loves it</li>
+        <li>✅ Reminds me of laughter and lemonade</li>
+    </ul>
+
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchRecipe(0)">🥗 Summer Salad</button>
+            <button class="tab-button" onclick="switchRecipe(1)">🍓 Berry Parfait</button>
+            <button class="tab-button" onclick="switchRecipe(2)">🔥 BBQ Skewers</button>
+        </div>
+
+        <div id="recipe-container"></div>
+    </div>
+
+    <div id="copied-badge">📋 Copied!</div>
+
+    <script>
+        const recipes = [
+            {
+                name: "🥗 Zesty Summer Salad",
+                image: "https://s3.amazonaws.com/shecodesio-production/uploads/files/000/166/866/original/Zesty_Summer_Salad.jpg?1748509289",
+                servings: 2,
+                ingredients: {
+                    "cherry tomatoes": "1 cup",
+                    "cucumber": "1/2 sliced",
+                    "feta cheese": "1/4 cup",
+                    "olive oil": "2 tbsp",
+                    "lemon juice": "1 tbsp",
+                    "fresh basil": "handful"
+                },
+                instructions: [
+                    "Mix all ingredients in a bowl.",
+                    "Drizzle with olive oil and lemon juice.",
+                    "Top with chopped basil and serve chilled."
+                ]
+            },
+            {
+                name: "🍓 Berry Yogurt Parfait",
+                image: "https://s3.amazonaws.com/shecodesio-production/uploads/files/000/166/867/original/Berry_Yogurt_Parfait.jpg?1748509318",
+                servings: 1,
+                ingredients: {
+                    "Greek yogurt": "1 cup",
+                    "granola": "1/2 cup",
+                    "mixed berries": "1/2 cup",
+                    "honey": "1 tbsp"
+                },
+                instructions: [
+                    "Layer yogurt, granola, and berries in a glass.",
+                    "Drizzle honey on top.",
+                    "Repeat layers if needed and serve immediately."
+                ]
+            },
+            {
+                name: "🔥 Grilled BBQ Skewers",
+                image: "https://s3.amazonaws.com/shecodesio-production/uploads/files/000/166/868/original/Grilled_BBQ_Skewers.jpg?1748509336",
+                servings: 4,
+                ingredients: {
+                    "chicken breast": "2 pieces",
+                    "bell peppers": "2 chopped",
+                    "red onion": "1 large",
+                    "BBQ sauce": "1/2 cup",
+                    "olive oil": "1 tbsp"
+                },
+                instructions: [
+                    "Cut chicken and veggies into chunks.",
+                    "Thread onto skewers alternately.",
+                    "Brush with BBQ sauce and olive oil.",
+                    "Grill for 10-12 minutes, turning occasionally."
+                ]
+            }
+        ];
+
+        let currentRecipe = 0;
+
+        function renderRecipe() {
+            const recipe = recipes[currentRecipe];
+            const container = document.getElementById("recipe-container");
+
+            container.innerHTML = `
+        <img src="${recipe.image}" alt="${recipe.name}" class="recipe-image" />
+        <h2>${recipe.name}</h2>
+
+        <div class="slider-container">
+          <label for="servings">👥 Servings: <span id="serving-count">${recipe.servings}</span></label>
+          <input type="range" id="servings" min="1" max="12" value="${recipe.servings}" oninput="updateServings(this.value)" />
+        </div>
+
+        <h3>Ingredients</h3>
+        <ul>
+          ${Object.entries(recipe.ingredients).map(
+                ([key, value]) =>
+                    `<li><span class="ingredient-amount" data-key="${key}">${value}</span> ${key}</li>`
+            ).join("")}
+        </ul>
+
+        <h3>Instructions</h3>
+        <ol>
+          ${recipe.instructions.map(step => `<li>${step}</li>`).join("")}
+        </ol>
+
+        <button class="print-button" onclick="window.print()">🖨️ Print / Save Recipe</button>
+        <button class="copy-button" onclick="copyRecipe()">📋 Copy to Clipboard</button>
+        <button class="email-button" onclick="emailRecipe()">📧 Share via Email</button>
+      `;
+        }
+
+        function updateServings(value) {
+            document.getElementById("serving-count").innerText = value;
+        }
+
+        function switchRecipe(index) {
+            currentRecipe = index;
+            document.querySelectorAll(".tab-button").forEach((btn, i) => {
+                btn.classList.toggle("active", i === index);
+            });
+            renderRecipe();
+        }
+
+        function copyRecipe() {
+            const recipe = recipes[currentRecipe];
+            const text = formatRecipeText(recipe);
+            navigator.clipboard.writeText(text).then(() => {
+                showCopiedBadge();
+            });
+        }
+
+        function emailRecipe() {
+            const recipe = recipes[currentRecipe];
+            const subject = encodeURIComponent(`Check out this recipe: ${recipe.name}`);
+            const body = encodeURIComponent(formatRecipeText(recipe));
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function formatRecipeText(recipe) {
+            const ingredients = Object.entries(recipe.ingredients).map(
+                ([key, value]) => `- ${value} ${key}`
+            ).join("\n");
+
+            const instructions = recipe.instructions.map(
+                (step, i) => `${i + 1}. ${step}`
+            ).join("\n");
+
+            return `${recipe.name}\n\nIngredients:\n${ingredients}\n\nInstructions:\n${instructions}`;
+        }
+
+        function showCopiedBadge() {
+            const badge = document.getElementById("copied-badge");
+            badge.classList.add("show");
+            setTimeout(() => badge.classList.remove("show"), 2000);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark");
+        }
+
+        renderRecipe();
+    </script>
+    <footer>
+        <p>
+            Made with 💖 by Alberta Jansen Van Nieuwenhuizen <br> as part of the 🍉 Tasty Summer Recipe Challenge
+            <a href="https://contact@shecodesfoundation.org">
+                Learn more on Shecodes</a>
+            and is open sourced on
+            <a href="" target="_blank">
+                GitHub</a> and is hosted <a href="" target="_blank">
+                on Netlify</a>
+
+        </p>
+    </footer>
+
+</body>
+
+</html>
